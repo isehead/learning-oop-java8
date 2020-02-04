@@ -4,12 +4,23 @@ public class Employee {
 
     private String firstName;
     private String lastName;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private int salary;
+    private int id;
 
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, int salary) {
+    public Employee(int id, String firstName, String lastName, int salary) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.salary = salary;
@@ -32,9 +43,10 @@ public class Employee {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Employee{" +
-                "firstName = '" + firstName + '\'' +
+                "id = '" + id + '\'' +
+                ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +
                 ", salary = " + salary +
                 '}';

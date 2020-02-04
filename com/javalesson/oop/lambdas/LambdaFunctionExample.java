@@ -1,3 +1,4 @@
+/*
 package com.javalesson.oop.lambdas;
 
 import com.javalesson.oop.lambdas.model.*;
@@ -25,7 +26,9 @@ public class LambdaFunctionExample {
         people.add(new Person("Sam", "Brown", 32));
         people.add(new Person("Tony", "Grey", 34));
 
-/*//Predicate
+
+//*
+/Predicate
         System.out.println(findMatch(employees, e -> e.getSalary() > 80000));
         System.out.println(findMatch(people, e -> e.getAge() > 30));
 
@@ -49,7 +52,8 @@ public class LambdaFunctionExample {
             int index = random.nextInt(3);
             Supplier supplier = shapes[index];
             supplier.get();
-        }*/
+        }
+
 
         Predicate<String> predicateFunc = t -> t.charAt(0) == 'a';
         System.out.println(predicateFunc.test("apple"));
@@ -60,6 +64,7 @@ public class LambdaFunctionExample {
         Function<Double, Float> functionCalc = Double::floatValue;
         System.out.println(functionFunc.apply(5));
         System.out.println(functionCalc.apply(3.256));
+
 
     }
 
@@ -89,3 +94,4 @@ public class LambdaFunctionExample {
     }
 
 }
+*/
