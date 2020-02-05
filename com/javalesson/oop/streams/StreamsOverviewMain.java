@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 public class StreamsOverviewMain {
 
     private static List<Employee> employeeList = new ArrayList<>();
+    private static List<Employee> secondList = new ArrayList<>();
     private static Map<Integer, Employee> employeeMap = null;
 
     public static void main(String[] args) throws IOException {
@@ -27,8 +28,20 @@ public class StreamsOverviewMain {
 //        employeeList.add(new Employee(10, "Mike", "Yellow", 60000));
 //        employeeList.add(new Employee(11, "Victoria", "Pink", 75000));
 
-//        testStreamFromList();
-        testStreamFromFile();
+        secondList.add(new Employee(1, "Alex", "Black", 50000));
+        secondList.add(new Employee(2, "John", "Green", 75000));
+        secondList.add(new Employee(6, "Sam", "Brown", 80000));
+        secondList.add(new Employee(9, "Tony", "Grey", 90000));
+        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
+        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
+        secondList.add(new Employee(16, "Sean", "Magenta", 80000));
+        secondList.add(new Employee(19, "Kate", "Black", 88000));
+//        secondList.add(new Employee(9, "Tony", "Grey", 90000));
+//        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
+//        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
+
+        testStreamFromList();
+//        testStreamFromFile();
     }
 
     private static void testStreamFromList() {
@@ -43,11 +56,28 @@ public class StreamsOverviewMain {
                 .map(StreamsOverviewMain::findById)
                 .filter(Objects::nonNull)
                 .findFirst();
+
+        Stream.of(ids)
+                .map(StreamsOverviewMain::findById)
+                .filter(Objects::nonNull)
+                .mapToInt(Employee::getSalary)
+                .max();
+
+        List<List<Employee>> departments = new ArrayList<>();
+        departments.add(employeeList);
+        departments.add(secondList);
+
+        departments.stream().flatMap(l -> l.stream().map
+                (e -> e.getFirstName())).forEach(System.out::println);
+
+
+        Stream.of(ids)
+                .peek(e->e=e*2).forEach(System.out::println);
     }
 
     private static void testStreamFromFile() throws IOException {
         Files.lines(Paths.get("words.txt"))
-                .filter(e->e.length()>4)
+                .filter(e -> e.length() > 4)
                 .map(String::toUpperCase)
                 .distinct()
                 .sorted()
