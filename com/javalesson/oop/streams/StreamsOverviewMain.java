@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.io.IOException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,8 +41,30 @@ public class StreamsOverviewMain {
 //        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
 //        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
 
-        testStreamFromList();
+//        testStreamFromList();
 //        testStreamFromFile();
+        testSortAndReduce();
+    }
+
+    private static void testSortAndReduce() {
+        Employee employee = employeeList.stream()
+                .max((e1, e2) -> e1.getId() - e2.getId()).get();
+
+        employeeList.stream()
+                .sorted(Comparator.comparing(Employee::getFirstName))
+                .distinct()
+                .collect(Collectors.toList()).forEach(System.out::println);
+
+        Employee identity = new Employee(0, "", "", 0);
+        Employee reducedEmployee = employeeList.stream()
+                .reduce(identity, (e1, e2) -> {
+                    e1.setId(e1.getId() + e2.getId());
+                    e1.setSalary(e1.getSalary() + e2.getSalary());
+                    return e1;
+                });
+        System.out.println(reducedEmployee);
+
+//        System.out.println(employee);
     }
 
     private static void testStreamFromList() {
@@ -57,6 +80,17 @@ public class StreamsOverviewMain {
                 .filter(Objects::nonNull)
                 .findFirst();
 
+        Random r = new Random();
+
+        Integer integer = Stream.of(ids)
+                .filter(i -> i % 2 == 0)
+                .filter(i -> i % 3 == 0)
+                .skip(1)
+                .findFirst()
+                .orElseGet(r::nextInt);
+        System.out.println(integer);
+
+
         Stream.of(ids)
                 .map(StreamsOverviewMain::findById)
                 .filter(Objects::nonNull)
@@ -67,12 +101,16 @@ public class StreamsOverviewMain {
         departments.add(employeeList);
         departments.add(secondList);
 
-        departments.stream().flatMap(l -> l.stream().map
-                (e -> e.getFirstName())).forEach(System.out::println);
+//        departments.stream().flatMap(l -> l.stream().map
+//                (e -> e.getFirstName())).forEach(System.out::println);
 
+//        Stream.of(ids)
+//                .peek(e -> e = e * 2).forEach(System.out::println);
 
+/*        int sum = 0;
+        Consumer<Integer> c = e -> e = e * 2;
         Stream.of(ids)
-                .peek(e->e=e*2).forEach(System.out::println);
+                .forEach(c);*/
     }
 
     private static void testStreamFromFile() throws IOException {
