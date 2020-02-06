@@ -6,6 +6,7 @@ public class Employee {
 
     private String firstName;
     private String lastName;
+    private String department;
 
     public int getId() {
         return id;
@@ -36,17 +37,34 @@ public class Employee {
         this.id = id;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     private int salary;
     private int id;
 
     public Employee() {
     }
 
-    public Employee(int id, String firstName, String lastName, int salary) {
+    public Employee(int id, String firstName, String lastName, int salary, String department) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.salary = salary;
+        this.department = department;
     }
 
     public String getFirstName() {

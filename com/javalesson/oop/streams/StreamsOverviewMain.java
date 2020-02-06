@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.io.IOException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,33 +18,47 @@ public class StreamsOverviewMain {
     private static Map<Integer, Employee> employeeMap = null;
 
     public static void main(String[] args) throws IOException {
-        employeeList.add(new Employee(1, "Alex", "Black", 50000));
-        employeeList.add(new Employee(2, "John", "Green", 75000));
-        employeeList.add(new Employee(6, "Sam", "Brown", 80000));
-        employeeList.add(new Employee(9, "Tony", "Grey", 90000));
-        employeeList.add(new Employee(10, "Mike", "Yellow", 60000));
-        employeeList.add(new Employee(11, "Victoria", "Pink", 75000));
-        employeeList.add(new Employee(16, "Sean", "Magenta", 80000));
-        employeeList.add(new Employee(19, "Kate", "Black", 88000));
-//        employeeList.add(new Employee(9, "Tony", "Grey", 90000));
-//        employeeList.add(new Employee(10, "Mike", "Yellow", 60000));
-//        employeeList.add(new Employee(11, "Victoria", "Pink", 75000));
+        employeeList.add(new Employee(1, "Alex", "Black", 50000, "IT"));
+        employeeList.add(new Employee(2, "John", "Green", 75000, "IT"));
+        employeeList.add(new Employee(6, "Sam", "Brown", 80000, "IT"));
+        employeeList.add(new Employee(9, "Tony", "Grey", 90000, "IT"));
+        employeeList.add(new Employee(10, "Mike", "Yellow", 60000, "IT"));
+        employeeList.add(new Employee(11, "Victoria", "Pink", 75000, "IT"));
+        employeeList.add(new Employee(16, "Sean", "Magenta", 80000, "Finance"));
+        employeeList.add(new Employee(19, "Kate", "Black", 88000, "Finance"));
+        employeeList.add(new Employee(9, "Tony", "Grey", 90000, "Finance"));
+        employeeList.add(new Employee(10, "Mike", "Yellow", 60000, "IT"));
+        employeeList.add(new Employee(11, "Victoria", "Pink", 75000, "Finance"));
 
-        secondList.add(new Employee(1, "Alex", "Black", 50000));
-        secondList.add(new Employee(2, "John", "Green", 75000));
-        secondList.add(new Employee(6, "Sam", "Brown", 80000));
-        secondList.add(new Employee(9, "Tony", "Grey", 90000));
-        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
-        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
-        secondList.add(new Employee(16, "Sean", "Magenta", 80000));
-        secondList.add(new Employee(19, "Kate", "Black", 88000));
+//        secondList.add(new Employee(1, "Alex", "Black", 50000));
+//        secondList.add(new Employee(2, "John", "Green", 75000));
+//        secondList.add(new Employee(6, "Sam", "Brown", 80000));
+//        secondList.add(new Employee(9, "Tony", "Grey", 90000));
+//        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
+//        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
+//        secondList.add(new Employee(16, "Sean", "Magenta", 80000));
+//        secondList.add(new Employee(19, "Kate", "Black", 88000));
 //        secondList.add(new Employee(9, "Tony", "Grey", 90000));
 //        secondList.add(new Employee(10, "Mike", "Yellow", 60000));
 //        secondList.add(new Employee(11, "Victoria", "Pink", 75000));
 
 //        testStreamFromList();
 //        testStreamFromFile();
-        testSortAndReduce();
+//        testSortAndReduce();
+        partitionByIncome();
+    }
+
+    private static <R> void groupByCriterion(Function<Employee, R> function) {
+        Map<Object, List<Employee>> collectedEmployees = employeeList.stream().collect(Collectors.groupingBy(function));
+        collectedEmployees.keySet().stream().forEach(e -> System.out.println(e + "\n" + collectedEmployees.get(e)));
+    }
+
+    private static void partitionByIncome() {
+        Map<Boolean, List<Employee>> collectedEmployees = employeeList.stream().collect(Collectors.partitioningBy(e -> e.getSalary() > 70000));
+        System.out.println("Poor employees");
+        System.out.println(collectedEmployees.get(false));
+        System.out.println("Rich employees");
+        System.out.println(collectedEmployees.get(true));
     }
 
     private static void testSortAndReduce() {
@@ -55,7 +70,7 @@ public class StreamsOverviewMain {
                 .distinct()
                 .collect(Collectors.toList()).forEach(System.out::println);
 
-        Employee identity = new Employee(0, "", "", 0);
+        Employee identity = new Employee(0, "", "", 0, "");
         Employee reducedEmployee = employeeList.stream()
                 .reduce(identity, (e1, e2) -> {
                     e1.setId(e1.getId() + e2.getId());
@@ -117,8 +132,9 @@ public class StreamsOverviewMain {
         Files.lines(Paths.get("words.txt"))
                 .filter(e -> e.length() > 4)
                 .map(String::toUpperCase)
-                .distinct()
-                .sorted()
+//                .distinct()
+//                .sorted()
+                .collect(Collectors.toCollection(TreeSet::new))
                 .forEach(System.out::println);
     }
 
