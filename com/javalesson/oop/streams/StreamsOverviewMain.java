@@ -2,12 +2,14 @@ package com.javalesson.oop.streams;
 
 import com.javalesson.oop.lambdas.model.Employee;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,7 +47,48 @@ public class StreamsOverviewMain {
 //        testStreamFromList();
 //        testStreamFromFile();
 //        testSortAndReduce();
-        partitionByIncome();
+//        partitionByIncome();
+//        groupByCriterion(Employee::getDepartment);
+
+        Supplier<Integer> supplier = new Supplier<Integer>() {
+          private int previous = 0;
+          private int current = 1;
+
+          @Override
+            public Integer get(){
+              int next = previous + current;
+              previous = current;
+              current = next;
+              return current;
+          }
+        };
+
+        testStreamGenerator(10, supplier);
+//        testStreamIterator(10);
+//        testParallelStream();
+    }
+
+    private static void testParallelStream() throws IOException {
+        employeeList
+                .parallelStream()
+                .map(Employee::getId)
+                .sorted()
+                .collect(Collectors.toList())
+                .forEach(System.out::println);
+
+        Files.lines(Paths.get("words.txt"))
+                .parallel()
+                .sorted();
+    }
+
+    private static void testStreamIterator(int limit) {
+        Stream.iterate(1, e -> e * 3).limit(limit).forEach(System.out::println);
+    }
+
+    private static <T> void testStreamGenerator(int limit, Supplier<T> supplier) {
+        Stream.generate(supplier)
+                .parallel()
+                .limit(limit).forEach(System.out::println);
     }
 
     private static <R> void groupByCriterion(Function<Employee, R> function) {
