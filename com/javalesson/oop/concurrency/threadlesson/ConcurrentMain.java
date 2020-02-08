@@ -1,9 +1,4 @@
-package com.javalesson.oop.concurrency;
-
-import java.nio.file.SimpleFileVisitor;
-
-import static com.javalesson.oop.concurrency.ColorScheme.GREEN;
-import static com.javalesson.oop.concurrency.ColorScheme.YELLOW;
+package com.javalesson.oop.concurrency.threadlesson;
 
 public class ConcurrentMain {
 
@@ -36,9 +31,9 @@ class SimpleThread extends Thread {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                System.out.println(YELLOW + "WARNING - " + currentThread().getName() + "was interrupted");
+                System.out.println(ColorScheme.YELLOW + "WARNING - " + currentThread().getName() + "was interrupted");
             }
-            System.out.println(GREEN + "INFO - " + currentThread().getName() + " - " + i);
+            System.out.println(ColorScheme.GREEN + "INFO - " + currentThread().getName() + " - " + i);
         }
     }
 }
@@ -51,10 +46,10 @@ class SimpleRunner implements Runnable {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                System.out.println(YELLOW + "WARNING - " + Thread.currentThread().getName() + " was interrupted");
+                System.out.println(ColorScheme.YELLOW + "WARNING - " + Thread.currentThread().getName() + " was interrupted");
                 return;
             }
-            System.out.println(GREEN + "INFO - Runnable - " + Thread.currentThread().getName() + " - " + i);
+            System.out.println(ColorScheme.GREEN + "INFO - Runnable - " + Thread.currentThread().getName() + " - " + i);
         }
         if(Thread.interrupted()){
             return;
