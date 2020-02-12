@@ -1,6 +1,9 @@
 package com.javalesson.oop.concurrency.executors;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import static com.javalesson.oop.concurrency.threadlesson.ColorScheme.RED;
 
@@ -9,16 +12,19 @@ public class Launcher {
     private static final int POOL_SIZE = 2;
 
     public static void main(String[] args) throws InterruptedException {
+
         boolean isDaemon = true;
         System.out.println(RED + "Starting the main thread");
         GCDRunnable r = new GCDRunnable(isDaemon);
 //        runInOneThread(r, isDaemon);
+        runWithExecutors(r, isDaemon);
         Thread.sleep(100);
         System.out.println(RED + "Leaving the main thread");
 
     }
 
     private static void runInOneThread(GCDRunnable r, boolean isDaemon) throws InterruptedException {
+
         Thread th = new Thread(r);
         if (isDaemon)
             th.setDaemon(true);
@@ -29,6 +35,23 @@ public class Launcher {
     }
 
     private static void runWithExecutors(GCDRunnable r, boolean isDaemon) throws InterruptedException {
-        ExecutorService executorService = Executors.newF
+
+        ThreadFactory factory = new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                if (isDaemon) {
+                    thread.setDaemon(true);
+                }
+                return thread;
+            }
+        };
+
+        ExecutorService executorService = Executors.newFixedThreadPool(POOL_SIZE, factory);
+        for (int i = 0; i < 5; i++) {
+            executorService.execute(r);
+        }
+        executorService.shutdown();
+        executorService.awaitTermination(30, TimeUnit.SECONDS);
     }
 }
