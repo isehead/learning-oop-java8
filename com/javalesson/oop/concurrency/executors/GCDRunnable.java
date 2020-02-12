@@ -8,13 +8,16 @@ import static com.javalesson.oop.concurrency.threadlesson.ColorScheme.GREEN;
 
 public class GCDRunnable extends Random implements Runnable {
 
-    public GCDRunnable() {
+    private boolean isDaemon;
 
+    public GCDRunnable(boolean isDaemon) {
+        this.isDaemon = isDaemon;
     }
 
     @Override
     public void run() {
-        String threadDescription = Thread.currentThread().getName();
+        String threadType = isDaemon ? "daemon " : "user ";
+        String threadDescription = threadType + Thread.currentThread().getName();
 
         System.out.println(BLUE + "Starting " + threadDescription);
         for (int i = 0; i < 10000000; i++) {
@@ -22,10 +25,15 @@ public class GCDRunnable extends Random implements Runnable {
             int b = nextInt();
 
             if (i % 10000 == 0) {
-                int gcd = computeGCD(a, b);
-                if (gcd > 5) {
-                    System.out.println(GREEN + "Running in " + threadDescription +
-                            ". The GCD of " + a + " and " + b + " is " + gcd);
+                if (!Thread.interrupted()) {
+                    int gcd = computeGCD(a, b);
+                    if (gcd > 5) {
+                        System.out.println(GREEN + "Running in " + threadDescription +
+                                ". The GCD of " + a + " and " + b + " is " + gcd);
+                    }
+                } else {
+                    System.out.println(BLUE + "Thread was interrupted");
+                    return;
                 }
             }
         }
